@@ -3,6 +3,7 @@
 #extension GL_EXT_gpu_shader4 : enable
 
 uniform sampler2DRect texture0;
+uniform sampler2DRect texture1;
 uniform float alphaVal;
 uniform float time;
 
@@ -13,12 +14,18 @@ void main() {
   vec2 pos = gl_TexCoord[0].xy;
 
   // Getting the pixel color from the texture texture0 in pos
-  vec4 color = texture2DRect(texture0, pos);
+  vec4 color;
+  vec4 color0 = texture2DRect(texture0, pos);
+  vec4 color1 = texture2DRect(texture1, pos);
 
-  // Changing the color - invert red, green, blue components
-  color.a = cnoise( vec3( pos * 0.02, time * 0.5 + 17.0 ) ) * 30.0;
+  // float noiseVal = cnoise( vec3( pos, time ) ) * alphaVal * 20.0;
+  // color.a = color.a + cnoise( vec3( pos, time ) ) * 30.0;
 
   // Output the color of shader
+  // color0.a = alphaVal;
+  color0.a = color1.b;
+  color.rgba = color0.rgba;
+
   gl_FragColor = color;
 }
 

@@ -3,16 +3,13 @@
 ofFbo fbo;
 ofShader shader;
 
-ofVideoPlayer video;
+ofVideoPlayer video1;
+//ofVideoPlayer video2;
 ofVideoGrabber camera;
-
-float soundLevel;
 ofSoundStream micInput;
 
+float soundLevel;
 float elapsedTime;
-
-float video1Alpha;
-float video2Alpha;
 
 //--------------------------------------------------------------
 void ofApp::setup() {
@@ -25,17 +22,16 @@ void ofApp::setup() {
     ofSetFrameRate(30);
     ofBackground(ofColor::white);
     
-    video.load("een.mov");
-    video.play();
+    video1.load("een.mov");
+//    video2.load("twee.mov");
+    video1.play();
+//    video2.play();
     
     camera.setDeviceID(0);
     camera.setDesiredFrameRate(30);
     camera.initGrabber(1280, 720);
     
-    video1Alpha = 0.0;
-    video2Alpha = 0.0;
-    
-    soundLevel = 0;
+    soundLevel = 0.0;
     
     ofSoundStreamSettings settings;
     auto devices = micInput.getMatchingDevices("default");
@@ -52,15 +48,12 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-    video.update();
+    video1.update();
+    // video2.update();
     if (camera.isInitialized()) camera.update();
     
     elapsedTime = ofGetElapsedTimef();
 
-    video1Alpha = ofNoise(elapsedTime);
-    if (video1Alpha > 1.0) video1Alpha = 1.0;
-    video2Alpha = soundLevel * 40;
-    if (video2Alpha > 1.0) video2Alpha = 1.0;
     // std::printf("Elapsed %f\n", elapsedTime);
     // std::printf("Noise %f\n", ofNoise(elapsedTime));
     // std::printf("RMS %f\n", video1Alpha);
@@ -68,31 +61,34 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+    if (camera.isInitialized()) camera.getTexturePtr();
+    //video1.getTexturePtr();
+    shader.setUniformTexture("texture1", video1.getTexture(), 1);
+
     shader.begin();
     fbo.begin();
 
     ofDisableSmoothing();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
 
-    if (camera.isInitialized()) {
-        shader.setUniform1f("time", elapsedTime);
-        shader.setUniform1f("alpahVal", video2Alpha);
-        camera.draw(0, 0, ofGetWidth(), ofGetHeight());
-        camera.getTexturePtr();
-        ofEnableAlphaBlending();
-    }
-    
     shader.setUniform1f("time", elapsedTime);
-    shader.setUniform1f("alpahVal", video1Alpha);
-    video.draw(0, 0, ofGetWidth(), ofGetHeight());
-    video.getTexturePtr();
+    shader.setUniform1f("alpahVal", soundLevel);
+
+    camera.draw(0, 0, ofGetWidth(), ofGetHeight());
+    // camera.getTexturePtr();
+    //if (!video1.) std::printf("Video1 is not allocated !");
+    //video1.draw(0, 0, ofGetWidth(), ofGetHeight());
     ofEnableAlphaBlending();
-    
+
+    //if (!video2.isAllocated()) std::printf("Video1 is not allocated !");
+    video1.draw(0, 0, ofGetWidth(), ofGetHeight());
+    ofEnableAlphaBlending();
+
     ofEnableSmoothing();
 
     fbo.end();
     shader.end();
-    
+
     fbo.draw(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(255);
 }

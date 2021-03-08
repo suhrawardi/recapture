@@ -1,0 +1,5 @@
+.DS_Store
+/bin/data/settings.xml
+/bin/data/*.mov
+/bin/data/*.mp4
+/bin/data/*.png

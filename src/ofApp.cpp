@@ -75,13 +75,15 @@ void ofApp::draw() {
     ofEnableBlendMode(OF_BLENDMODE_ADD);
 
     if (camera.isInitialized()) {
-        shader.setUniform1f("alphaVal", video2Alpha);
+        shader.setUniform1f("time", elapsedTime);
+        shader.setUniform1f("alpahVal", video2Alpha);
         camera.draw(0, 0, ofGetWidth(), ofGetHeight());
         camera.getTexturePtr();
         ofEnableAlphaBlending();
     }
     
-    shader.setUniform1f("alphaVal", video1Alpha);
+    shader.setUniform1f("time", elapsedTime);
+    shader.setUniform1f("alpahVal", video1Alpha);
     video.draw(0, 0, ofGetWidth(), ofGetHeight());
     video.getTexturePtr();
     ofEnableAlphaBlending();

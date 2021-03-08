@@ -22,7 +22,7 @@ void ofApp::setup() {
     ofSetFrameRate(30);
     ofBackground(ofColor::white);
     
-    video1.load("een.mov");
+    video1.load("recapture.mp4");
 //    video2.load("twee.mov");
     video1.play();
 //    video2.play();
@@ -66,21 +66,27 @@ void ofApp::draw() {
     
     shader.begin();
     fbo.begin();
+    ofSetBackgroundAuto(false);
+    ofEnableAlphaBlending();
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    ofDisableSmoothing();
     
     shader.setUniformTexture("texture0", camera.getTexture(), 0);
     shader.setUniformTexture("texture1", video1.getTexture(), 1);
-
-    ofDisableSmoothing();
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
-        
+    
+    float alphaLevel = soundLevel * 50.0;
+    if (alphaLevel > 0.8) alphaLevel = 0.8;
+    if (alphaLevel < 0.4) alphaLevel = 0.4;
+    
+    // std::printf("sound %f\n", alphaLevel);
     shader.setUniform1f("time", elapsedTime);
     shader.setUniform1f("alpahVal", soundLevel);
         
     video1.draw(0, 0, ofGetWidth(), ofGetHeight());
-    ofEnableAlphaBlending();
+    //ofEnableAlphaBlending();
     
     camera.draw(0, 0, ofGetWidth(), ofGetHeight());
-    ofEnableAlphaBlending();
+    //ofEnableAlphaBlending();
         
     ofEnableSmoothing();
 
@@ -88,7 +94,6 @@ void ofApp::draw() {
     shader.end();
         
     fbo.draw(0, 0, ofGetWidth(), ofGetHeight());
-    ofSetColor(255);
 }
 
 void ofApp::audioIn(ofSoundBuffer & buffer) {

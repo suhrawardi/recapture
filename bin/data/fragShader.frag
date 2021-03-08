@@ -21,8 +21,11 @@ void main() {
   float noiseVal = cnoise( vec3( pos.x * 0.007, pos.y * 0.008, time * 0.33 ) );
 
   // Output the color of shader
-  color0.a = 0.4 + (noiseVal * 0.5);
-  color.rgba = color0.rgba;
+  // color0.a = 0.5 + alphaVal + (noiseVal * 0.5);
+  color0.a = noiseVal;
+  color.rgb = mix(color1.rgb, color0.rgb, color0.a);
+  color.a = color0.a;
+  // color.rgba = color0.rgba;
 
   gl_FragColor = color;
 }

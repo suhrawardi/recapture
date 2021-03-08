@@ -18,12 +18,10 @@ void main() {
   vec4 color0 = texture2DRect(texture0, pos);
   vec4 color1 = texture2DRect(texture1, pos);
 
-  // float noiseVal = cnoise( vec3( pos, time ) ) * alphaVal * 20.0;
-  // color.a = color.a + cnoise( vec3( pos, time ) ) * 30.0;
+  float noiseVal = cnoise( vec3( pos.x * 0.007, pos.y * 0.008, time * 0.33 ) );
 
   // Output the color of shader
-  // color0.a = alphaVal;
-  color0.a = color1.b;
+  color0.a = 0.4 + (noiseVal * 0.5);
   color.rgba = color0.rgba;
 
   gl_FragColor = color;

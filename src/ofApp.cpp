@@ -4,7 +4,7 @@ ofFbo fbo;
 ofShader shader;
 
 ofVideoPlayer video1;
-//ofVideoPlayer video2;
+// ofVideoPlayer video2;
 ofVideoGrabber camera;
 ofSoundStream micInput;
 
@@ -61,34 +61,32 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-    if (camera.isInitialized()) camera.getTexturePtr();
-    //video1.getTexturePtr();
-    shader.setUniformTexture("texture1", video1.getTexture(), 1);
-
+    //if (camera.isInitialized()) camera.getTexturePtr();
+    // video1.getTexturePtr();
+    
     shader.begin();
     fbo.begin();
+    
+    shader.setUniformTexture("texture0", camera.getTexture(), 0);
+    shader.setUniformTexture("texture1", video1.getTexture(), 1);
 
     ofDisableSmoothing();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
-
+        
     shader.setUniform1f("time", elapsedTime);
     shader.setUniform1f("alpahVal", soundLevel);
-
-    camera.draw(0, 0, ofGetWidth(), ofGetHeight());
-    // camera.getTexturePtr();
-    //if (!video1.) std::printf("Video1 is not allocated !");
-    //video1.draw(0, 0, ofGetWidth(), ofGetHeight());
-    ofEnableAlphaBlending();
-
-    //if (!video2.isAllocated()) std::printf("Video1 is not allocated !");
+        
     video1.draw(0, 0, ofGetWidth(), ofGetHeight());
     ofEnableAlphaBlending();
-
+    
+    camera.draw(0, 0, ofGetWidth(), ofGetHeight());
+    ofEnableAlphaBlending();
+        
     ofEnableSmoothing();
 
     fbo.end();
     shader.end();
-
+        
     fbo.draw(0, 0, ofGetWidth(), ofGetHeight());
     ofSetColor(255);
 }

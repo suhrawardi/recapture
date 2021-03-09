@@ -18,7 +18,7 @@ void main() {
   vec4 color0 = texture2DRect(texture0, pos);
   vec4 color1 = texture2DRect(texture1, pos);
 
-  float noiseVal = cnoise( vec3( pos.x * 0.007, pos.y * 0.008, time * 0.33 ) );
+  float noiseVal = cnoise( vec3( pos.x * 0.013, pos.y * 0.015, time * 0.121 ) );
 
   // Output the color of shader
   // color0.a = 0.5 + alphaVal + (noiseVal * 0.5);
